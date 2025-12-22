@@ -1,0 +1,60 @@
+version: '3.8'
+
+services:
+  postgres:
+    image: postgres:15-alpine
+    container_name: careerpivot-db
+    environment:
+      POSTGRES_USER: careerpivot
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: careerpivot
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - careerpivot-network
+
+  redis:
+    image: redis:7-alpine
+    container_name: careerpivot-redis
+    ports:
+      - "6379:6379"
+    networks:
+      - careerpivot-network
+
+  # backend:
+  #   build: ./backend
+  #   container_name: careerpivot-backend
+  #   ports:
+  #     - "8080:8080"
+  #   environment:
+  #     SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/careerpivot
+  #     SPRING_DATASOURCE_USERNAME: careerpivot
+  #     SPRING_DATASOURCE_PASSWORD: password
+  #     SPRING_REDIS_HOST: redis
+  #     SPRING_REDIS_PORT: 6379
+  #   depends_on:
+  #     - postgres
+  #     - redis
+  #   networks:
+  #     - careerpivot-network
+
+  # frontend:
+  #   build: ./frontend
+  #   container_name: careerpivot-frontend
+  #   ports:
+  #     - "3000:3000"
+  #   environment:
+  #     NEXT_PUBLIC_API_URL: http://localhost:8080/api
+  #   depends_on:
+  #     - backend
+  #   networks:
+  #     - careerpivot-network
+
+volumes:
+  postgres_data:
+
+networks:
+  careerpivot-network:
+    driver: bridge
