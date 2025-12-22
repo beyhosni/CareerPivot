@@ -1,28 +1,51 @@
-# CareerPivot MVP
+# CareerPivot MVP 🚀
 
-Plateforme SaaS de stratégie de transition de carrière personnalisée.
+Plateforme SaaS de stratégie de transition de carrière personnalisée, boostée par l'IA et l'expertise humaine.
 
-## Fonctionnalités (MVP)
+## 🛠 Tech Stack
+
+```mermaid
+mindmap
+  root((CareerPivot))
+    Backend
+      Java 17
+      Spring Boot 3
+      Spring Security & JWT
+      JPA & Hibernate
+      PostgreSQL
+    Frontend
+      Next.js 16
+      React 19
+      Lucide Icons
+      Tailwind CSS
+    Monetization
+      Stripe API
+      Webhooks
+    Infrastructure
+      Docker Compose
+      Redis
+      Postman
+```
+
+![Java](https://img.shields.io/badge/java-%23ED8B00.svg?style=for-the-badge&logo=openjdk&logoColor=white)
+![Spring](https://img.shields.io/badge/spring-%236DB33F.svg?style=for-the-badge&logo=spring&logoColor=white)
+![Next.js](https://img.shields.io/badge/next.js-000000?style=for-the-badge&logo=nextdotjs&logoColor=white)
+![PostgreSQL](https://img.shields.io/badge/PostgreSQL-316192?style=for-the-badge&logo=postgresql&logoColor=white)
+![Stripe](https://img.shields.io/badge/Stripe-626CD9?style=for-the-badge&logo=Stripe&logoColor=white)
+
+## ✨ Fonctionnalités (MVP + Phase 3)
+
 1.  **Authentification**: Inscription et Connexion sécurisées (JWT).
-2.  **Assessment**: Questionnaire de profilage (Compétences, Objectifs, Contraintes) stocké en JSONB.
-3.  **Stratégie**: Génération automatique d'un Scénario de transition (Pivot Adjacent vs Reconversion Totale) basé sur les règles métier.
-4.  **Roadmap**: Génération d'un plan d'action sur 6 mois avec tâches hebdomadaires.
-5.  **Dashboard**: Visualisation du scénario et suivi des tâches.
+2.  **Assessment**: Questionnaire de profilage stocké en JSONB.
+3.  **IA Strategy**: Scénarios de transition (Pivot Adjacent vs Total) automatisés.
+4.  **Roadmap Dynamique**: Plan d'action détaillé avec suivi des tâches.
+5.  **Monétisation (Premium)**: Checkout Stripe et Feature Gating (Plans PRO/PREMIUM).
+6.  **Accompagnement Expert**: Module de Coaching humain et retours sur Roadmap.
+7.  **Backoffice Admin**: Métriques de performance et gestion des coachs.
 
-## Stack Technique
-- **Backend**: Java 17, Spring Boot 3, Spring Security, JPA, PostgreSQL (JSONB).
-- **Frontend**: Next.js 14, TypeScript, TailwindCSS, React Query (via simple axios hooks).
-- **Infra**: Docker Compose (PostgreSQL, Redis).
+## 🚀 Installation & Démarrage
 
-## Prérequis
-- Java 17+
-- Node.js 18+
-- Docker & Docker Compose
-- Maven
-
-## Installation & Démarrage
-
-### 1. Infrastructure (Base de données)
+### 1. Infrastructure
 ```bash
 docker-compose up -d postgres redis
 ```
@@ -30,11 +53,10 @@ docker-compose up -d postgres redis
 ### 2. Backend
 ```bash
 cd backend
-mvn clean install
 mvn spring-boot:run
 ```
-L'API sera accessible sur `http://localhost:8080`.
-Documentation Swagger: `http://localhost:8080/swagger-ui.html`
+- API: `http://localhost:8080/api`
+- Swagger UI: `http://localhost:8080/swagger-ui/index.html`
 
 ### 3. Frontend
 ```bash
@@ -42,14 +64,10 @@ cd frontend
 npm install
 npm run dev
 ```
-L'application sera accessible sur `http://localhost:3000`.
+- App: `http://localhost:3000`
 
-## Architecture
-- **Backend**: Monolithe Modulaire (`auth`, `assessment`, `scenario`, `roadmap`).
-- **Frontend**: Application Next.js (App Router).
+## 🏗 Architecture
+Le projet suit une architecture **Modulaire** permettant une séparation claire entre les modules `auth`, `billing`, `coaching`, et `roadmap`.
 
-## Validation du MVP
-1.  Accédez à `http://localhost:3000`.
-2.  Créez un compte.
-3.  Remplissez le questionnaire (indiquez < 5h/semaine pour un pivot soft, > 5h pour un pivot total).
-4.  Consultez votre Dashboard avec le scénario généré et la roadmap.
+---
+*Généré par Antigravity - Advanced Agentic Coding for CareerPivot.*
