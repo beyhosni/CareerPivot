@@ -1,0 +1,19 @@
+global:
+  environment: dev
+
+frontend:
+  image: 
+    repository: careerpivot/frontend
+    tag: latest
+  service:
+    port: 80
+
+api:
+  image:
+    repository: careerpivot/api
+    tag: latest
+  db:
+    host: terraform_output_db_endpoint
+    name: careerpivot_dev
+  redis:
+    host: terraform_output_redis_endpoint
