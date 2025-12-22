@@ -1,4 +1,4 @@
-package com.careerpivot.backend.scenario.domain;
+package com.careerpivot.backend.notification.domain;
 
 import com.careerpivot.backend.auth.domain.User;
 import jakarta.persistence.*;
@@ -7,12 +7,14 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDateTime;
+
 @Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-public class Scenario {
+public class Notification {
     @Id
     @GeneratedValue
     private Integer id;
@@ -22,13 +24,8 @@ public class Scenario {
     private User user;
 
     private String title;
-    private String description;
-    @Column(length = 2000)
-    private String justification;
-    private int score; // 0-100
-    private int effort; // 0-100
-    private int financialRisk; // 0-100
-    private int timeRequiredMonths;
-    private String riskLevel; // LOW, MEDIUM, HIGH
-    private boolean isActive;
+    private String message;
+    private String type; // INFO, WARNING, SUCCESS
+    private boolean read;
+    private LocalDateTime createdAt;
 }

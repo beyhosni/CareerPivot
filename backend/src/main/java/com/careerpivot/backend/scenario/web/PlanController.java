@@ -23,7 +23,8 @@ public class PlanController {
 
     @PostMapping("/generate")
     public ResponseEntity<Roadmap> generatePlan(@AuthenticationPrincipal User user) {
-        Scenario scenario = scenarioService.generateScenario(user);
+        List<Scenario> scenarios = scenarioService.generateScenarios(user);
+        Scenario scenario = scenarios.get(0); // Take first as default for legacy endpoint
         Roadmap roadmap = roadmapService.generateRoadmap(scenario);
         return ResponseEntity.ok(roadmap);
     }
@@ -35,13 +36,10 @@ public class PlanController {
     }
 
     @GetMapping("/tasks")
-    public ResponseEntity<List<Task>> getTasks(@AuthenticationPrincipal User user) {
-        // Find scenario for user, then roadmap, then tasks
-        // Simplified: generate if not exists? Or just get.
-        // For MVP, we assume one scenario per user.
-        // Implement get logic properly in services later.
-        // For now, simple flow through generation or error if not found?
-        // Let's implement retrieving:
-        return ResponseEntity.ok(List.of()); // Stub for now or need getByUSer logic
+    public ResponseEntity<List<Task>> getTasks(@RequestParam(required = false) Integer roadmapId) {
+        if (roadmapId != null) {
+            return ResponseEntity.ok(roadmapService.getTasksById(roadmapId));
+        }
+        return ResponseEntity.ok(List.of());
     }
 }

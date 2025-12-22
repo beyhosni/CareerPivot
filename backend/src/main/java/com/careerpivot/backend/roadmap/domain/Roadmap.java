@@ -19,9 +19,17 @@ public class Roadmap {
     @GeneratedValue
     private Integer id;
 
-    @OneToOne
+    @ManyToOne
     @JoinColumn(name = "scenario_id")
     private Scenario scenario;
+
+    @Enumerated(EnumType.STRING)
+    private RoadmapHorizon horizon;
+
+    @Enumerated(EnumType.STRING)
+    private RoadmapStatus status;
+
+    private Integer version;
 
     private LocalDate startDate;
     private LocalDate endDate;

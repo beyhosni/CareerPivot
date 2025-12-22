@@ -1,0 +1,22 @@
+scenarios:
+  adjacent:
+    base_score: 90
+    effort: 20
+    risk: 10
+    conditions:
+      - field: "experience_years"
+        operator: "GT"
+        value: 5
+        bonus: 5
+  hybride:
+    base_score: 70
+    effort: 50
+    risk: 30
+  progressif:
+    base_score: 80
+    effort: 40
+    risk: 20
+  securise:
+    base_score: 85
+    effort: 30
+    risk: 5
