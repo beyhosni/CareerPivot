@@ -1,0 +1,47 @@
+spring:
+  application:
+    name: careerpivot-backend
+  config:
+    import: "optional:classpath:rules.yaml"
+  datasource:
+    url: ${DB_URL:jdbc:postgresql://localhost:5432/careerpivot}
+    username: ${DB_USERNAME:careerpivot}
+    password: ${DB_PASSWORD:password}
+  jpa:
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+  flyway:
+    enabled: true
+    baseline-on-migrate: true
+
+# Actuator & Metrics
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "health,info,metrics,prometheus"
+  endpoint:
+    health:
+      show-details: always
+  metrics:
+    tags:
+      application: ${spring.application.name}
+      env: ${SPRING_PROFILES_ACTIVE:dev}
+
+# Logging
+logging:
+  level:
+    root: INFO
+    com.careerpivot: DEBUG
+  pattern:
+    level: "%5p [${spring.application.name:},%X{traceId:-},%X{spanId:-}]"
+
+# App specific
+stripe:
+  secret-key: ${STRIPE_SECRET_KEY:sk_test_placeholder}
+  webhook-secret: ${STRIPE_WEBHOOK_SECRET:whsec_placeholder}
+app:
+  frontend-url: ${FRONTEND_URL:http://localhost:3000}

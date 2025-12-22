@@ -1,0 +1,23 @@
+replicas: 1
+minimumMasterNodes: 1
+
+persistence:
+  enabled: true
+  labels:
+    enabled: false
+
+volumeClaimTemplate:
+  accessModes: ["ReadWriteOnce"]
+  resources:
+    requests:
+      storage: 10Gi
+
+resources:
+  requests:
+    cpu: "500m"
+    memory: "1Gi"
+  limits:
+    cpu: "1000m"
+    memory: "2Gi"
+
+esJavaOpts: "-Xms512m -Xmx512m"
