@@ -7,6 +7,7 @@ import Link from "next/link";
 import ScenarioComparison from "@/components/ScenarioComparison";
 import RoadmapTimeline from "@/components/RoadmapTimeline";
 import NotificationCenter from "@/components/NotificationCenter";
+import { LayoutDashboard, CreditCard, Users, ShieldCheck, LogOut } from "lucide-react";
 
 interface Scenario {
     id: number;
@@ -43,23 +44,22 @@ export default function DashboardPage() {
     const [tasks, setTasks] = useState<Task[]>([]);
     const [selectedHorizon, setSelectedHorizon] = useState("SIX_MONTHS");
     const [loading, setLoading] = useState(true);
+    const [user, setUser] = useState<any>(null);
+    const [subscription, setSubscription] = useState<any>(null);
 
     const activeScenario = scenarios.find(s => s.isActive);
 
     const fetchData = async () => {
         try {
             setLoading(true);
+            const userRes = await api.get("/auth/me");
+            setUser(userRes.data);
+
+            const subRes = await api.get("/billing/subscription");
+            setSubscription(subRes.data);
+
             const scenarioRes = await api.get("/scenarios");
             setScenarios(scenarioRes.data);
-
-            const active = scenarioRes.data.find((s: Scenario) => s.isActive);
-            if (active) {
-                // Fetch roadmap for active scenario and selected horizon
-                // For simplicity, we assume the backend returns roadmaps
-                const roadmapRes = await api.get(`/api/plan/current`); // Legacy or update to specific
-                // Actually let's use a new endpoint or update PlanController
-                // To keep it clean, I'll fetch roadmaps for the active scenario
-            }
         } catch (error) {
             console.error("Failed to load dashboard", error);
         } finally {
@@ -73,10 +73,9 @@ export default function DashboardPage() {
             if (res.data && res.data.length > 0) {
                 const roadmap = res.data[0];
                 setCurrentRoadmap(roadmap);
-                const tasksRes = await api.get(`/api/plan/tasks?roadmapId=${roadmap.id}`); // Update to support ID
+                const tasksRes = await api.get(`/api/plan/tasks?roadmapId=${roadmap.id}`);
                 setTasks(tasksRes.data);
             } else {
-                // Trigger generation if not exists
                 const genRes = await api.post(`/scenarios/${scenarioId}/roadmaps/generate?horizon=${horizon}`);
                 setCurrentRoadmap(genRes.data);
                 setTasks([]);
@@ -112,8 +111,23 @@ export default function DashboardPage() {
                             <span className="text-2xl font-black text-blue-600 tracking-tighter">CAREERPIVOT.</span>
                         </div>
                         <div className="flex items-center space-x-6">
+                            <Link href="/pricing" className="flex items-center gap-1 text-sm font-semibold text-gray-500 hover:text-blue-600">
+                                <CreditCard className="h-4 w-4" /> Offres
+                            </Link>
+                            {subscription?.plan === 'PREMIUM' && (
+                                <Link href="/coaching" className="flex items-center gap-1 text-sm font-semibold text-gray-500 hover:text-blue-600">
+                                    <Users className="h-4 w-4" /> Coaching
+                                </Link>
+                            )}
+                            {user?.role === 'ADMIN' && (
+                                <Link href="/admin" className="flex items-center gap-1 text-sm font-semibold text-gray-500 hover:text-blue-600">
+                                    <ShieldCheck className="h-4 w-4" /> Admin
+                                </Link>
+                            )}
                             <NotificationCenter />
-                            <button onClick={logout} className="text-sm font-medium text-gray-500 hover:text-blue-600 transition-colors">Déconnexion</button>
+                            <button onClick={logout} className="flex items-center gap-1 text-sm font-medium text-gray-500 hover:text-blue-600 transition-colors">
+                                <LogOut className="h-4 w-4" /> Déconnexion
+                            </button>
                         </div>
                     </div>
                 </div>
@@ -155,7 +169,7 @@ export default function DashboardPage() {
                                 )}
 
                                 {currentRoadmap?.status === 'READY' && (
-                                    <RoadmapTimeline horizon={selectedHorizon} tasks={tasks} />
+                                    <RoadmapTimeline horizon={selectedHorizon} tasks={tasks} roadmapId={currentRoadmap.id} />
                                 )}
                             </div>
                         )}

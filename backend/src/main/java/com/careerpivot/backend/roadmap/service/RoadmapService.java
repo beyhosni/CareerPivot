@@ -10,15 +10,18 @@ import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 import com.careerpivot.backend.config.EventPublisher;
+import com.careerpivot.backend.roadmap.repository.RoadmapFeedbackRepository;
 
 @Service
 @RequiredArgsConstructor
 public class RoadmapService {
     private final RoadmapRepository roadmapRepository;
     private final TaskRepository taskRepository;
+    private final RoadmapFeedbackRepository roadmapFeedbackRepository;
     private final EventPublisher eventPublisher;
     private final com.careerpivot.backend.config.AnalyticsService analyticsService;
 
@@ -108,5 +111,21 @@ public class RoadmapService {
 
     public List<Task> getTasks(Roadmap roadmap) {
         return taskRepository.findByRoadmap(roadmap);
+    }
+
+    public RoadmapFeedback addFeedback(Roadmap roadmap, User coach, String comments, String suggestedAdjustments) {
+        List<RoadmapFeedback> existing = roadmapFeedbackRepository.findByRoadmapOrderByVersionDesc(roadmap);
+        int nextVersion = existing.isEmpty() ? 1 : existing.get(0).getVersion() + 1;
+
+        RoadmapFeedback feedback = RoadmapFeedback.builder()
+                .roadmap(roadmap)
+                .coach(coach)
+                .comments(comments)
+                .suggestedAdjustments(suggestedAdjustments)
+                .version(nextVersion)
+                .createdAt(LocalDateTime.now())
+                .build();
+
+        return roadmapFeedbackRepository.save(feedback);
     }
 }

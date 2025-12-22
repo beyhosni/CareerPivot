@@ -1,6 +1,7 @@
 "use client";
 
 import { Calendar, CheckCircle2, Circle } from "lucide-react";
+import RoadmapFeedback from "./RoadmapFeedback";
 
 interface Task {
     id: number;
@@ -13,14 +14,15 @@ interface Task {
 interface Props {
     horizon: string;
     tasks: Task[];
+    roadmapId: number;
 }
 
-export default function RoadmapTimeline({ horizon, tasks }: Props) {
+export default function RoadmapTimeline({ horizon, tasks, roadmapId }: Props) {
     const horizonTitle = {
         'SIX_MONTHS': '6 Mois (Concret)',
         'ONE_YEAR': '1 An (Structuré)',
         'TWO_YEARS': '2 Ans (Stratégique)'
-    }[horizon] || horizon;
+    }[horizon as 'SIX_MONTHS' | 'ONE_YEAR' | 'TWO_YEARS'] || horizon;
 
     return (
         <div className="bg-white rounded-xl shadow-lg p-6">
@@ -38,7 +40,7 @@ export default function RoadmapTimeline({ horizon, tasks }: Props) {
                 {tasks.length === 0 ? (
                     <p className="ml-8 text-gray-500 italic">Chargement des jalons...</p>
                 ) : (
-                    tasks.map((task, index) => (
+                    tasks.map((task) => (
                         <div key={task.id} className="mb-8 ml-8 relative">
                             {/* Dot */}
                             <div className={`absolute -left-[41px] p-1 bg-white rounded-full border-2 ${task.status === 'DONE' ? 'border-green-500 text-green-500' : 'border-blue-500 text-blue-500'}`}>
@@ -54,6 +56,8 @@ export default function RoadmapTimeline({ horizon, tasks }: Props) {
                     ))
                 )}
             </div>
+
+            <RoadmapFeedback roadmapId={roadmapId} />
         </div>
     );
 }

@@ -35,6 +35,16 @@ public class User implements UserDetails {
     @Enumerated(EnumType.STRING)
     private Role role;
 
+    // Coach Profile Fields
+    @Column(columnDefinition = "TEXT")
+    private String bio;
+    private String expertise;
+    private String languages;
+    private String availability;
+    private Double pricePerSession;
+    private String industry;
+    private String timezone;
+
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return List.of(new SimpleGrantedAuthority(role.name()));

@@ -31,6 +31,10 @@ public class Roadmap {
 
     private Integer version;
 
+    @ManyToOne
+    @JoinColumn(name = "parent_roadmap_id")
+    private Roadmap parentRoadmap;
+
     private LocalDate startDate;
     private LocalDate endDate;
 }
