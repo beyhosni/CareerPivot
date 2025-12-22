@@ -87,14 +87,18 @@ export default function ScenarioComparison({ scenarios, onSelect }: Props) {
                         {scenarios.map(s => (
                             <td key={s.id} className="px-6 py-4 text-center">
                                 {s.isActive ? (
-                                    <button disabled className="px-4 py-2 bg-gray-100 text-gray-400 rounded-lg flex items-center mx-auto">
+                                    <button disabled className="px-4 py-2 bg-gray-100 text-gray-400 rounded-lg flex items-center mx-auto text-sm font-bold">
                                         <CheckCircle className="w-5 h-5 mr-2" />
                                         Sélectionné
                                     </button>
                                 ) : (
                                     <button
-                                        onClick={() => onSelect(s.id)}
-                                        className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+                                        onClick={() => {
+                                            if (confirm(`Êtes-vous sûr de vouloir activer le scénario "${s.title}" ? Cela mettra à jour votre roadmap 3D.`)) {
+                                                onSelect(s.id);
+                                            }
+                                        }}
+                                        className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors text-sm font-bold shadow-md hover:shadow-lg"
                                     >
                                         Activer
                                     </button>

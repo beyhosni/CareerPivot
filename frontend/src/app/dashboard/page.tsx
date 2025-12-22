@@ -7,7 +7,14 @@ import Link from "next/link";
 import ScenarioComparison from "@/components/ScenarioComparison";
 import RoadmapTimeline from "@/components/RoadmapTimeline";
 import NotificationCenter from "@/components/NotificationCenter";
-import { LayoutDashboard, CreditCard, Users, ShieldCheck, LogOut } from "lucide-react";
+import dynamic from "next/dynamic";
+
+const Onboarding3D = dynamic(() => import("@/components/Onboarding3D"), { ssr: false });
+const Roadmap3D = dynamic(() => import("@/components/Roadmap3D"), { ssr: false });
+const Simulator3D = dynamic(() => import("@/components/Simulator3D"), { ssr: false });
+
+import { LayoutDashboard, CreditCard, Users, ShieldCheck, LogOut, Eye, Box } from "lucide-react";
+import { useUIConfig } from "@/context/UIConfigContext";
 
 interface Scenario {
     id: number;
@@ -46,6 +53,8 @@ export default function DashboardPage() {
     const [loading, setLoading] = useState(true);
     const [user, setUser] = useState<any>(null);
     const [subscription, setSubscription] = useState<any>(null);
+    const [viewMode, setViewMode] = useState<"2D" | "3D">("3D");
+    const { animationsEnabled, setAnimationsEnabled } = useUIConfig();
 
     const activeScenario = scenarios.find(s => s.isActive);
 
@@ -135,10 +144,13 @@ export default function DashboardPage() {
 
             <main className="max-w-7xl mx-auto py-10 px-4 sm:px-6 lg:px-8 space-y-12">
                 {scenarios.length === 0 ? (
-                    <div className="text-center py-20 bg-white rounded-2xl shadow-xl">
-                        <h2 className="text-3xl font-bold text-gray-900">Tracez votre avenir</h2>
-                        <p className="mt-4 text-gray-500 max-w-md mx-auto">Commençons par évaluer vos compétences et vos aspirations pour générer vos scénarios de transition.</p>
-                        <Link href="/assessment" className="mt-8 inline-block px-8 py-4 bg-blue-600 text-white font-bold rounded-xl hover:bg-blue-700 transition-all transform hover:scale-105 shadow-lg">Commencer le questionnaire</Link>
+                    <div className="space-y-12">
+                        <Onboarding3D />
+                        <div className="text-center py-20 bg-white rounded-2xl shadow-xl border border-gray-100">
+                            <h2 className="text-3xl font-bold text-gray-900">Tracez votre avenir</h2>
+                            <p className="mt-4 text-gray-500 max-w-md mx-auto">Commençons par évaluer vos compétences et vos aspirations pour générer vos scénarios de transition.</p>
+                            <Link href="/assessment" className="mt-8 inline-block px-8 py-4 bg-blue-600 text-white font-bold rounded-xl hover:bg-blue-700 transition-all transform hover:scale-105 shadow-lg">Commencer le questionnaire</Link>
+                        </div>
                     </div>
                 ) : (
                     <>
@@ -169,7 +181,49 @@ export default function DashboardPage() {
                                 )}
 
                                 {currentRoadmap?.status === 'READY' && (
-                                    <RoadmapTimeline horizon={selectedHorizon} tasks={tasks} roadmapId={currentRoadmap.id} />
+                                    <div className="space-y-12">
+                                        <div className="flex justify-between items-center bg-white p-4 rounded-2xl border border-gray-100 shadow-sm">
+                                            <div className="flex items-center gap-4">
+                                                <button
+                                                    onClick={() => setViewMode("3D")}
+                                                    className={`flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-bold transition-all ${viewMode === "3D" ? 'bg-indigo-600 text-white shadow-md' : 'text-gray-500 hover:bg-gray-50'}`}
+                                                >
+                                                    <Box className="w-4 h-4" /> Vue 3D Immersion
+                                                </button>
+                                                <button
+                                                    onClick={() => setViewMode("2D")}
+                                                    className={`flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-bold transition-all ${viewMode === "2D" ? 'bg-indigo-600 text-white shadow-md' : 'text-gray-500 hover:bg-gray-50'}`}
+                                                >
+                                                    <Eye className="w-4 h-4" /> Vue Liste Focus
+                                                </button>
+                                            </div>
+                                            <div className="flex items-center gap-2">
+                                                <span className="text-xs font-bold text-gray-400 uppercase tracking-widest">Animations</span>
+                                                <button
+                                                    onClick={() => setAnimationsEnabled(!animationsEnabled)}
+                                                    className={`relative inline-flex h-6 w-11 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none ${animationsEnabled ? 'bg-indigo-600' : 'bg-gray-200'}`}
+                                                >
+                                                    <span className={`pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out ${animationsEnabled ? 'translate-x-5' : 'translate-x-0'}`} />
+                                                </button>
+                                            </div>
+                                        </div>
+
+                                        {viewMode === "3D" ? (
+                                            <Roadmap3D tasks={tasks} horizon={selectedHorizon} />
+                                        ) : (
+                                            <RoadmapTimeline horizon={selectedHorizon} tasks={tasks} roadmapId={currentRoadmap.id} />
+                                        )}
+
+                                        {subscription?.plan === 'PREMIUM' && (
+                                            <div className="pt-12 border-t border-gray-200">
+                                                <div className="mb-8">
+                                                    <h3 className="text-2xl font-black text-gray-900 tracking-tight">Espace Simulation Premium</h3>
+                                                    <p className="text-gray-500">Testez différents scénarios pour optimiser votre réussite.</p>
+                                                </div>
+                                                <Simulator3D />
+                                            </div>
+                                        )}
+                                    </div>
                                 )}
                             </div>
                         )}
