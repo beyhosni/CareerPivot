@@ -26,4 +26,10 @@ public class AuthenticationController {
             @RequestBody AuthenticationRequest request) {
         return ResponseEntity.ok(service.authenticate(request));
     }
+
+    @org.springframework.web.bind.annotation.GetMapping("/me")
+    public ResponseEntity<com.careerpivot.backend.auth.domain.User> getMe(
+            @org.springframework.security.core.annotation.AuthenticationPrincipal com.careerpivot.backend.auth.domain.User user) {
+        return ResponseEntity.ok(user);
+    }
 }

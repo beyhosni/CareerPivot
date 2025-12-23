@@ -23,6 +23,6 @@ public class AssessmentService {
 
     public Assessment getAssessment(User user) {
         return repository.findByUser(user)
-                .orElseThrow(() -> new RuntimeException("Assessment not found for user"));
+                .orElse(null);
     }
 }
